@@ -176,6 +176,11 @@ VALUES (
         'Samantha Williams'
     );
 
+UPDATE employee
+SET street = '123'
+WHERE
+    employee_name = 'Jane Doe';
+
 SELECT * FROM employee;
 
 SELECT * FROM works;
@@ -184,12 +189,16 @@ SELECT * FROM company;
 
 SELECT * FROM manages;
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -- 2 (a) Find the names of all employees who work for First Bank Corporation
 
 SELECT employee_name
 FROM works
 WHERE
     company_name = 'First Bank Corporation';
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- 2 (b) Find the names and cities of residence of all employees who work for First Bank Corporation
 
@@ -198,6 +207,16 @@ FROM employee E, works W
 WHERE
     E.employee_name = W.employee_name
     AND W.company_name = 'First Bank Corporation';
+
+-- ************************************** USING JOIN **************************************
+
+SELECT E.employee_name, E.city
+FROM employee E
+    NATURAL JOIN works W
+WHERE
+    W.company_name = 'First Bank Corporation';
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- 2 (c) Find the names, street addresses, and cities of residence of all employees who work for First Bank Corporation and earn more than $100,000
 
@@ -211,6 +230,20 @@ WHERE
     AND W.company_name = 'First Bank Corporation'
     AND W.salary > 10000;
 
+-- ************************************** USING JOIN **************************************
+
+SELECT
+    E.employee_name,
+    E.street,
+    E.city
+FROM employee E
+    NATURAL JOIN works W
+WHERE
+    W.company_name = 'First Bank Corporation'
+    AND W.salary > 10000;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -- 2 (d) Find all employees in the database who live in the same cities as companies for which they work
 
 SELECT E.employee_name
@@ -222,6 +255,17 @@ WHERE
     E.employee_name = W.employee_name
     AND W.company_name = C.company_name
     AND E.city = C.city;
+
+-- ************************************** USING JOIN **************************************
+
+SELECT E.employee_name
+FROM employee E
+    NATURAL JOIN (company C, works W)
+WHERE
+    W.company_name = C.company_name
+    AND E.city = C.city;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- 2 (e) Find all employees in database who live in the same cities and on the same streets as do their manager
 
@@ -238,6 +282,10 @@ WHERE
     AND E1.street = E2.street
     AND E1.city = E2.city;
 
+-- ************************************** USING JOIN **************************************
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -- 2 (f) Find all employees in database who do not work for First Bank Corporation
 
 SELECT
@@ -246,6 +294,18 @@ SELECT
 FROM works W
 WHERE
     NOT W.company_name = 'First Bank Corporation';
+
+-- ************************************** USING JOIN **************************************
+
+SELECT
+    E.employee_name,
+    W.company_name
+FROM employee E
+    NATURAL JOIN works W
+WHERE
+    W.company_name != 'First Bank Corporation';
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- 2 (g) Find all employees in the database who earn more than each employee of Small Bank Corporation
 
@@ -260,6 +320,8 @@ WHERE
             W.company_name = 'Small Bank Corporation'
     );
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -- 2 (h) Assume that the companies may be located in several cities. Find the companies located in every city in which Small Bank Corporation is located.
 
 SELECT C.company_name, C.city
@@ -272,6 +334,8 @@ WHERE C.city = (
     )
     AND NOT C.company_name = 'Small Bank Corporation';
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -- 2 (i) Find all employees who earn more than the average salary of all employees of their company.
 
 SELECT
@@ -283,6 +347,8 @@ WHERE W.salary > (
         FROM works
     );
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -- 2 (j) Find the company that has the most employees
 
 SELECT
@@ -292,6 +358,8 @@ FROM works W
 GROUP BY company_name
 ORDER BY occurence DESC
 LIMIT 1;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- 2 (k) Find the company that has the smallest payroll
 
@@ -303,6 +371,8 @@ WHERE W.salary = (
         SELECT MIN(salary)
         FROM works
     );
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- 2 (l) Find those companies whose employees earn a higher salary, on average, than the average salary at First Bank Corporation.
 
@@ -316,6 +386,8 @@ HAVING AVG(W.salary) > (
             company_name = 'First Bank Corporation'
     );
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -- 3 (a) Modify the database so that John Smith now lives in Newton
 
 Update employee
@@ -324,6 +396,8 @@ WHERE
     employee_name = 'John Smith';
 
 SELECT city FROM employee WHERE employee_name = 'John Smith';
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- 3 (b) Give all employees of 'First Bank Corporation' 10% raise
 
@@ -336,6 +410,8 @@ UPDATE works
 SET salary = 1.1 * salary
 WHERE
     company_name = 'First Bank Corporation';
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- 3 (c) Give all managers of 'First Bank Corporation' 10% raise
 
@@ -356,6 +432,8 @@ SET W.salary = 1.1 * W.salary
 WHERE
     W.company_name = 'First Bank Corporation'
     AND W.employee_name = M.manager_name;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- 3 (d) Give all managers of 'First Bank Corporation' 10% raise unless the salary becomes greater than $100,000; in such case, give only 3 % raise
 
@@ -379,6 +457,8 @@ SET
 WHERE
     W.employee_name = M.manager_name
     AND W.company_name = 'First Bank Corporation';
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- 3 (e) Delete all tuples in the works relation for employees of Small Bank Corporation
 
