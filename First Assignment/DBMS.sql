@@ -210,6 +210,8 @@ WHERE
 
 -- ************************************** USING JOIN **************************************
 
+SELECT * from employee E NATURAL JOIN works W;
+
 SELECT E.employee_name, E.city
 FROM employee E
     NATURAL JOIN works W
@@ -283,6 +285,15 @@ WHERE
     AND E1.city = E2.city;
 
 -- ************************************** USING JOIN **************************************
+
+--error
+
+SELECT *
+FROM employee E
+    JOIN manages M
+WHERE
+    E.employee_name = M.employee_name
+    AND;
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
